@@ -7,7 +7,7 @@ pipeline {
         AWS_REGION = 'us-east-1' // e.g., us-east-1
         AWS_ACCOUNT_ID = '822826627239' // Your AWS Account ID
         // This variable will be passed to Terraform
-        TF_VAR_environment_tag = 'dev' // Example: 'dev', 'staging', 'prod'
+        TF_VAR_environment_tag = 'prod' // Example: 'dev', 'staging', 'prod'
     }
 
     stages {
@@ -74,4 +74,5 @@ pipeline {
         }
     }
 }
+
 
