@@ -48,3 +48,32 @@ output "s3_bucket_name" {
   description = "Name of the S3 bucket managed by Jenkins Terraform"
   value       = aws_s3_bucket.my_jenkins_managed_bucket.bucket
 }
+
+resource "aws_s3_bucket" "app_version_bucket" {
+  bucket        = "app-version-bucket-${data.aws_caller_identity.current.account_id}"
+  force_destroy = true
+  tags = {
+    Name        = "AppVersionBucket"
+    Environment = var.environment_tag
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "app_version_bucket_public_access_block" {
+  bucket                  = aws_s3_bucket.app_version_bucket.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+resource "aws_s3_object" "app_version_file" {
+  bucket       = aws_s3_bucket.app_version_bucket.id
+  key          = "current-app-version.txt"
+  content      = var.app_version_content
+  content_type = "text/plain"
+}
+
+output "app_version_bucket_name" {
+  description = "Name of the S3 bucket storing app version"
+  value       = aws_s3_bucket.app_version_bucket.bucket
+}
